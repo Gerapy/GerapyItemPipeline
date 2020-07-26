@@ -1,0 +1,2 @@
+gerapy-pyppeteer
+gerapy-item-pipeline
