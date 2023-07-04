@@ -1,5 +1,5 @@
 import pymongo
-from gerapy_item_pipeline.settings import *
+from .settings import *
 
 
 class MongoDBPipeline(object):
@@ -62,13 +62,13 @@ class MongoDBPipeline(object):
                                     item.get(self.item_primary_key_field,
                                              self.item_primary_key_default)
         if self.upsert:
-            self.db[collection_name].update({
+            self.db[collection_name].update_one({
                 primary_key_field: item.get(primary_key_field)
             }, {
                 '$set': item
             }, upsert=True)
         else:
-            self.db[collection_name].insert(item)
+            self.db[collection_name].insert_one(item)
         return item
     
     def close_spider(self, spider):
