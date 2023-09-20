@@ -42,14 +42,16 @@ class MongoDBPipeline(object):
         :param spider: spider object
         :return:
         """
-        collection_name = getattr(item, self.collection_name_field) or \
-            item.get(self.collection_name_field,
-                     self.collection_name_default)
+        collection_name = item.get(self.collection_name_field,
+                                   self.collection_name_default) \
+            if isinstance(item, dict) else \
+            getattr(item, self.collection_name_field)
         if self.upsert:
             # get primary key field or use primary key default
-            primary_key_field = getattr(item, self.item_primary_key_field) or \
-                item.get(self.item_primary_key_field,
-                         self.item_primary_key_default)
+            primary_key_field = item.get(self.item_primary_key_field,
+                                         self.item_primary_key_default) \
+                if isinstance(item, dict) else \
+                getattr(item, self.item_primary_key_field)
             self.db[collection_name].update_one({
                 primary_key_field: item.get(primary_key_field)
             }, {
